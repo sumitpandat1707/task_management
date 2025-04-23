@@ -89,12 +89,8 @@ WSGI_APPLICATION = 'task_management.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'task_app',       # e.g., testdb
-        'USER': 'root',                     # default XAMPP MySQL user
-        'PASSWORD': '',                     # XAMPP default has no password
-        'HOST': '127.0.0.1',                # or 'localhost'
-        'PORT': '3306',                     # MySQL default port
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
