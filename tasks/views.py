@@ -4,12 +4,17 @@ from rest_framework import status, permissions
 from .models import Task
 from .serializers import TaskSerializer
 
-
-# GET all tasks
+#all task fetch 
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
 def list_tasks(request):
-    tasks = Task.objects.all().order_by('-created_at')
+    user = request.user
+
+    if hasattr(user, 'role') and user.role == 'admin':
+        tasks = Task.objects.all().order_by('-created_at')
+    else:
+        tasks = Task.objects.filter(assigned_to=user).order_by('-created_at')
+
     serializer = TaskSerializer(tasks, many=True)
     return Response(serializer.data)
 
