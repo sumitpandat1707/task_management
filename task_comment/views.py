@@ -42,3 +42,13 @@ def delete_comment(request, pk):
         return Response(status=status.HTTP_204_NO_CONTENT)
     except TaskComment.DoesNotExist:
         return Response({"error": "Comment not found"}, status=status.HTTP_404_NOT_FOUND)
+    
+
+@api_view(['GET'])
+def get_latest_comment_by_task(request, task_id):
+    comment = TaskComment.objects.filter(task_id=task_id).order_by('-created_at').first()
+    if comment:
+        serializer = TaskCommentSerializer(comment)
+        return Response(serializer.data)
+    return Response({"message": "No comments found for this task"}, status=status.HTTP_404_NOT_FOUND)
+
