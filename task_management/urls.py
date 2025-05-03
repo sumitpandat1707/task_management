@@ -8,6 +8,7 @@ urlpatterns = [
     path('api/users/', include('users.urls')),
     path('api/tasks/', include('tasks.urls')),
     path('api/', include('task_comment.urls')),
+    path('api/', include('project.urls')),
 ]
 
 if settings.DEBUG:
