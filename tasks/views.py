@@ -9,14 +9,41 @@ from .serializers import TaskSerializer
 @permission_classes([permissions.IsAuthenticated])
 def list_tasks(request):
     user = request.user
+    project_id = request.query_params.get('project_id')
 
     if hasattr(user, 'role') and user.role == 'admin':
-        tasks = Task.objects.all().order_by('-created_at')
+        # Admin can view all tasks
+        if project_id:
+            tasks = Task.objects.filter(project_id=project_id).order_by('-created_at')
+        else:
+            tasks = Task.objects.all().order_by('-created_at')
     else:
-        tasks = Task.objects.filter(assigned_to=user).order_by('-created_at')
+        # Non-admin can only view their own assigned tasks
+        if project_id:
+            tasks = Task.objects.filter(project_id=project_id, assigned_to=user).order_by('-created_at')
+        else:
+            tasks = Task.objects.filter(assigned_to=user).order_by('-created_at')
 
     serializer = TaskSerializer(tasks, many=True)
     return Response(serializer.data)
+
+# @api_view(['GET'])
+# @permission_classes([permissions.IsAuthenticated])
+# def list_tasks(request):
+#     user = request.user
+#     project_id = request.query_params.get('project_id')  # Get project_id from query params
+
+#     if project_id:  # If a project_id is provided
+#         tasks = Task.objects.filter(project_id=project_id).order_by('-created_at')
+#     else:
+#         # If no project_id is provided, fetch tasks based on user role
+#         if hasattr(user, 'role') and user.role == 'admin':
+#             tasks = Task.objects.all().order_by('-created_at')
+#         else:
+#             tasks = Task.objects.filter(assigned_to=user).order_by('-created_at')
+
+#     serializer = TaskSerializer(tasks, many=True)
+#     return Response(serializer.data)
 
 # POST create new task
 @api_view(['POST'])
