@@ -41,12 +41,16 @@ def update_user(request, pk):
     try:
         user = CustomUser.objects.get(pk=pk)
     except CustomUser.DoesNotExist:
-        return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-
-    serializer = CustomUserSerializer(user, data=request.data)
+        return Response({'detail': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    # Serializer ko use karke update karte hain
+    serializer = CustomUserSerializer(user, data=request.data, partial=True)
+    
     if serializer.is_valid():
+        # Agar password field ko skip karna ho toh validate karte waqt unko hata do
         serializer.save()
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # ✅ Delete user
