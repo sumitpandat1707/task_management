@@ -119,13 +119,12 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTH_USER_MODEL = 'users.CustomUser'
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),  # 🔥 Access token valid for 1 day
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7), # Optional: Refresh token for 7 days
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=36500),  # ~10 years
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=36500),  # ~100 years
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
